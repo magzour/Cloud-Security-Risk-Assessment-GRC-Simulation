@@ -1,206 +1,206 @@
-# Cloud Security Risk Assessment: GRC Simulation Lab
+# Cloud Security Risk Assessment: GRC Lab Simulation
 
-A simulated enterprise cloud security risk assessment executed from a **Governance, Risk, and Compliance (GRC)** perspective. This project models an audit of an Azure-hosted cloud asset, evaluating configuration posture, identifying threats and vulnerabilities, scoring risks using a quantitative 5×5 matrix, and aligning mitigation controls with **NIST CSF** and **CIS Critical Security Controls**.
+This project simulates a real-world cloud security risk assessment from a **Governance, Risk, and Compliance (GRC)** perspective. Using a simple Azure-hosted Windows virtual machine, I evaluated the system's setup, identified assets, mapped realistic threats and vulnerabilities, scored risks using a $5 \times 5$ matrix, and aligned security controls to **NIST CSF** and **CIS Critical Security Controls**.
 
 ---
 
 ## Table of Contents
-- [Executive Overview](#executive-overview)
-- [Lab Environment & Prerequisites](#lab-environment--prerequisites)
-- [Hands-On Lab Walkthrough](#hands-on-lab-walkthrough)
-  - [Phase 1: Environment Provisioning](#phase-1-environment-provisioning)
-  - [Phase 2: Asset, Threat, and Vulnerability Assessment](#phase-2-asset-threat-and-vulnerability-assessment)
-  - [Phase 3: Quantitative Risk Scoring](#phase-3-quantitative-risk-scoring)
-  - [Phase 4: Framework Alignment](#phase-4-framework-alignment)
-- [Formal GRC Deliverable: Cloud Security Assessment Report](#formal-grc-deliverable-cloud-security-assessment-report)
+- [Project Overview](#project-overview)
+- [Lab Setup & Prerequisites](#lab-setup--prerequisites)
+- [Hands-On Lab Steps](#hands-on-lab-steps)
+  - [Phase 1: Setting Up the Lab](#phase-1-setting-up-the-lab)
+  - [Phase 2: Finding Assets, Threats, and Vulnerabilities](#phase-2-finding-assets-threats-and-vulnerabilities)
+  - [Phase 3: Calculating Risk Scores](#phase-3-calculating-risk-scores)
+  - [Phase 4: Mapping Controls to Security Frameworks](#phase-4-mapping-controls-to-security-frameworks)
+- [Final Deliverable: GRC Risk Assessment Report](#final-deliverable-grc-risk-assessment-report)
   - [1. Executive Summary](#1-executive-summary)
-  - [2. Scope & Target Architecture](#2-scope--target-architecture)
-  - [3. Identified Assets & Threat Profiles](#3-identified-assets--threat-profiles)
-  - [4. Enterprise Risk Register](#4-enterprise-risk-register)
-  - [5. Framework Control Mapping](#5-framework-control-mapping)
-  - [6. Strategic Mitigation Roadmap](#6-strategic-mitigation-roadmap)
-  - [7. Overall Posture Assessment](#7-overall-posture-assessment)
+  - [2. Scope & Target Environment](#2-scope--target-environment)
+  - [3. Asset, Threat, and Vulnerability Breakdown](#3-asset-threat-and-vulnerability-breakdown)
+  - [4. Risk Register](#4-risk-register)
+  - [5. Framework Mapping Table](#5-framework-mapping-table)
+  - [6. Recommendations & Action Plan](#6-recommendations--action-plan)
+  - [7. Conclusion & Risk Summary](#7-conclusion--risk-summary)
 
 ---
 
-## Executive Overview
+## Project Overview
 
-The purpose of this project is to simulate real-world GRC and security operations workflows in an enterprise cloud setting. By assessing a single cloud-hosted virtual machine, this assessment evaluates the attack surface, identifies critical assets, examines threat scenarios, quantifies organizational exposure using a standard $5 \times 5$ risk scoring methodology, and maps defensible controls against industry standards (**NIST CSF v1.1/2.0** and **CIS Controls v8**).
-
----
-
-## Lab Environment & Prerequisites
-
-* **Cloud Platform:** Microsoft Azure (Free-tier eligible subscription)
-* **Compute Target:** 1x Azure Virtual Machine (`Windows Server 2022 Datacenter`)
-* **Tooling:** Azure Portal, PowerShell, Windows Event Viewer, Excel / Google Sheets
-* **Auditing Methodology:** Non-exploitative configuration review and security posture assessment
+The goal of this project is to practice how IT and GRC analysts assess security risk in enterprise cloud environments. Instead of running active penetration tests or exploits, this lab focuses on auditing system configurations, finding security weaknesses, calculating risk scores based on likelihood and impact, and recommending standard, auditable security fixes mapped to NIST and CIS frameworks.
 
 ---
 
-## Hands-On Lab Walkthrough
+## Lab Setup & Prerequisites
 
-### Phase 1: Environment Provisioning
+* **Cloud Platform:** Microsoft Azure (Free account)
+* **Target System:** 1x Azure Virtual Machine (`Windows Server 2022 Datacenter`)
+* **Tools Used:** Azure Portal, PowerShell, Windows Event Viewer, Excel / Google Sheets
+* **Method:** Non-intrusive configuration audit and risk review
 
-#### 1. Account Setup & Portal Access
-1. Sign up for an Azure account at [azure.microsoft.com/free](https://azure.microsoft.com/free).
-2. Complete SMS and payment method verification (free trial avoids charges unless upgraded).
-3. Authenticate to the [Azure Management Portal](https://portal.azure.com).
+---
+
+## Hands-On Lab Steps
+
+### Phase 1: Setting Up the Lab
+
+#### 1. Azure Account Setup
+1. Sign up for an Azure free account at [azure.microsoft.com/free](https://azure.microsoft.com/free).
+2. Complete the standard phone and credit card verification steps (you will not be charged on the free tier).
+3. Log in to the [Azure Portal](https://portal.azure.com).
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/6e327028-6ad6-418d-84d6-c00b7a224549" alt="Azure Portal Sign-up Screen" width="850"/>
+  <img src="https://github.com/user-attachments/assets/6e327028-6ad6-418d-84d6-c00b7a224549" alt="Azure Portal Sign-up" width="850"/>
 </p>
 
-#### 2. Resource Group Creation
-1. Search for **Resource groups** in the top search bar and select **Create**.
-2. Specify deployment parameters:
+#### 2. Create the Resource Group
+1. Search for **Resource groups** in the top search bar and click **Create**.
+2. Enter the following settings:
    * **Subscription:** `Default`
    * **Resource Group Name:** `GRC-Lab`
-   * **Region:** Nearest deployment zone (e.g., `West US 2`)
-3. Select **Review + Create** and finalize the resource group.
+   * **Region:** Closest region to you (e.g., `West US 2`)
+3. Click **Review + Create**, then click **Create**.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/8ec65c72-0993-4b41-9f0e-6e7a183fb142" alt="Azure Resource Groups blade" width="600"/>
+  <img src="https://github.com/user-attachments/assets/8ec65c72-0993-4b41-9f0e-6e7a183fb142" alt="Azure Resource Groups" width="600"/>
   &nbsp;&nbsp;
-  <img src="https://github.com/user-attachments/assets/c7fbe6e8-8091-4417-9588-8b05e10d2ed8" alt="Configuring GRC-Lab Resource Group" width="600"/>
+  <img src="https://github.com/user-attachments/assets/c7fbe6e8-8091-4417-9588-8b05e10d2ed8" alt="Creating GRC-Lab Resource Group" width="600"/>
 </p>
 
-#### 3. Virtual Machine Deployment
-Deploy a standard target VM inside the newly created resource group:
+#### 3. Deploy the Virtual Machine
+Create a simple target VM inside the `GRC-Lab` resource group:
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/2dfbdc3c-f06c-493d-a29d-60df6c939f0b" alt="Virtual Machines Search" width="700"/>
 </p>
 
-* **Basic Configuration:**
+* **Configuration Details:**
   * **Subscription:** `Default`
   * **Resource Group:** `GRC-Lab`
   * **Virtual Machine Name:** `GRC-WIN-VM01`
-  * **Region:** Same as Resource Group (e.g., `West US 2`)
+  * **Region:** Same as resource group (e.g., `West US 2`)
   * **Image:** `Windows Server 2022 Datacenter - x64 Gen2`
-  * **Size:** `Standard_DC1s_v3` (or equivalent cost-effective lab SKU)
-* **Administrator Credentials:**
+  * **Size:** `Standard_DC1s_v3` (keeps lab costs low)
+* **Administrator Account:**
   * **Username:** `azureadmin`
-  * **Password:** Robust complex passphrase (documented securely)
-* **Inbound Connectivity:**
+  * **Password:** Strong password (saved securely)
+* **Inbound Port Rules:**
   * **Public Inbound Ports:** Select *Allow selected ports*
-  * **Selected Inbound Ports:** `RDP (3389)` *(simulating intentional exposure for assessment)*
-* Select **Review + Create**, then confirm deployment.
+  * **Allowed Ports:** `RDP (3389)` *(opened intentionally to simulate public exposure)*
+* Click **Review + Create**, then click **Create**.
 
-#### 4. Baseline Connectivity Validation
-1. Open `GRC-WIN-VM01` in the portal, select **Connect** $\rightarrow$ **RDP**, and download the connection `.rdp` file.
-2. Authenticate using configured administrator credentials to establish desktop session access.
+#### 4. Test RDP Connection
+1. Open `GRC-WIN-VM01` in the portal, click **Connect** $\rightarrow$ **RDP**, and download the connection file.
+2. Sign in using the `azureadmin` credentials to verify that you can reach the desktop.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/72b52203-1842-4f57-96df-9a5f7f2ad5e9" alt="Azure VM Connect RDP blade" width="600"/>
+  <img src="https://github.com/user-attachments/assets/72b52203-1842-4f57-96df-9a5f7f2ad5e9" alt="Azure VM RDP Connect Blade" width="600"/>
   &nbsp;&nbsp;
-  <img src="https://github.com/user-attachments/assets/9ab2bd03-5c58-47a2-8479-4040e90e8636" alt="Windows Server Desktop Initial Session" width="600"/>
+  <img src="https://github.com/user-attachments/assets/9ab2bd03-5c58-47a2-8479-4040e90e8636" alt="Windows Server Desktop" width="600"/>
 </p>
 
 ---
 
-### Phase 2: Asset, Threat, and Vulnerability Assessment
+### Phase 2: Finding Assets, Threats, and Vulnerabilities
 
-A proper GRC posture evaluation analyzes three foundational tiers:
-* **Assets:** What critical services, data, and access vectors require protection?
-* **Threats:** What adversaries or circumstances could realistically compromise them?
-* **Vulnerabilities:** What configuration gaps or architectural weaknesses allow threats to materialize?
+A standard GRC assessment breaks down into three key questions:
+* **Assets:** What are we protecting?
+* **Threats:** What could realistically harm or compromise it?
+* **Vulnerabilities:** What weaknesses make that harm possible?
 
-#### 1. OS & Compute Asset Verification
-Inspect system configuration parameters under `GRC-WIN-VM01` $\rightarrow$ **Settings** $\rightarrow$ **Properties / Operating System** to confirm build baseline and patch level.
+#### 1. Check the Operating System & Host
+Under `GRC-WIN-VM01` $\rightarrow$ **Settings** $\rightarrow$ **Properties**, check the OS version, patch level, and general machine settings.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/68db4218-d543-46c5-ab43-07a4a37fb3eb" alt="Azure VM OS Properties" width="700"/>
+  <img src="https://github.com/user-attachments/assets/68db4218-d543-46c5-ab43-07a4a37fb3eb" alt="Azure VM Properties" width="700"/>
 </p>
 
-#### 2. Network Attack Surface & Inbound Exposure Analysis
-Navigate to **Networking** $\rightarrow$ **Network Settings** to review Network Security Group (NSG) rules:
-* Examine inbound rules for public listeners.
-* Confirm that TCP port `3389` (RDP) allows traffic sourced from `*` / `Internet` / `Any`, creating an unthrottled brute-force vector.
+#### 2. Check Network Ports and Inbound Access
+Go to **Networking** $\rightarrow$ **Network Settings** to review the Network Security Group (NSG) rules:
+* Look for open ports that face the public internet.
+* Notice that port `3389` (RDP) allows inbound traffic from `Any` source (`*` or `Internet`), which exposes the login screen to automated bots.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/9d4c7b75-1067-42e5-bf69-c5f1858ffaf2" alt="NSG Inbound Port Rules Showing Open RDP" width="850"/>
+  <img src="https://github.com/user-attachments/assets/9d4c7b75-1067-42e5-bf69-c5f1858ffaf2" alt="NSG Inbound Port Rules" width="850"/>
 </p>
 
-#### 3. Identity and Privilege Audit
-Evaluate local privilege escalation and credential boundaries:
-1. Navigate to **Operations** $\rightarrow$ **Run Command** $\rightarrow$ `RunPowerShellScript`.
-2. Execute `Get-LocalUser` to inventory local identity stores and detect active administrative accounts.
+#### 3. Audit Local Accounts and Privileges
+Check what admin accounts exist on the machine:
+1. Go to **Operations** $\rightarrow$ **Run Command** $\rightarrow$ `RunPowerShellScript`.
+2. Run `Get-LocalUser` to list all local accounts.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/3754e4db-a679-4f5c-ab13-71d509a4c736" alt="PowerShell Run Command executing Get-LocalUser" width="850"/>
+  <img src="https://github.com/user-attachments/assets/3754e4db-a679-4f5c-ab13-71d509a4c736" alt="Running Get-LocalUser in Run Command" width="850"/>
 </p>
 
-3. Within the active RDP session, launch `Computer Management (compmgmt.msc)` $\rightarrow$ **Local Users and Groups** $\rightarrow$ **Groups** $\rightarrow$ **Administrators** to verify local administrator assignments.
+3. Inside the VM desktop session, open **Computer Management** $\rightarrow$ **Local Users and Groups** $\rightarrow$ **Groups** $\rightarrow$ **Administrators** to confirm which accounts have full control.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/cfe4a50b-4390-4733-8539-691a1b90b736" alt="Windows Local Users and Groups configuration" width="700"/>
+  <img src="https://github.com/user-attachments/assets/cfe4a50b-4390-4733-8539-691a1b90b736" alt="Local Users and Groups" width="700"/>
 </p>
 
-#### 4. Monitoring & Telemetry Review
-Audit detective security visibility at both the hypervisor and guest OS layers:
-* **Cloud Telemetry:** Navigate to `GRC-WIN-VM01` $\rightarrow$ **Monitoring**. Verify if continuous diagnostics and Azure Monitor collection are enabled.
-* **Guest OS Auditing:** Within the VM, open `Event Viewer (eventvwr.msc)` $\rightarrow$ **Windows Logs** $\rightarrow$ **Security** to confirm event auditing is generating valid Event IDs (e.g., 4624, 4625).
+#### 4. Review System Logging and Monitoring
+Check whether the system is set up to detect suspicious activity:
+* **Cloud Level:** In the Azure portal, click **Monitoring** on the left menu for `GRC-WIN-VM01` to see if logs are sent to a monitoring workspace.
+* **OS Level:** On the VM, open **Event Viewer** $\rightarrow$ **Windows Logs** $\rightarrow$ **Security** to confirm whether login attempts and system events are being recorded locally.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/3aee0dab-6d25-4a66-805a-4b190d29dcaf" alt="Azure Monitoring Unconfigured State" width="600"/>
+  <img src="https://github.com/user-attachments/assets/3aee0dab-6d25-4a66-805a-4b190d29dcaf" alt="Azure Monitoring Unconfigured" width="600"/>
   &nbsp;&nbsp;
-  <img src="https://github.com/user-attachments/assets/ef220f56-ea90-4b36-8acc-736169beace0" alt="Windows Security Event Viewer Logs" width="600"/>
+  <img src="https://github.com/user-attachments/assets/ef220f56-ea90-4b36-8acc-736169beace0" alt="Event Viewer Security Logs" width="600"/>
 </p>
 
 ---
 
-### Phase 3: Quantitative Risk Scoring
+### Phase 3: Calculating Risk Scores
 
-To remove subjective ambiguity from assessment findings, risks are calculated using an industry-standard qualitative-to-quantitative formula:
+Rather than guessing how serious an issue is, risk assessments use a simple formula to prioritize what needs fixing first:
 
 $$\text{Risk Score} = \text{Likelihood} \times \text{Impact}$$
 
-#### Calibration Scoring Rubrics
+#### Scoring Guidelines
 
-| Scale | Likelihood Criteria | Impact Severity Criteria |
+| Rating | Likelihood (How likely is it?) | Impact (How bad would it be?) |
 | :---: | :--- | :--- |
-| **1** | **Rare:** Attack vector is theoretically possible but requires extreme resource expenditure. | **Minimal:** Little to no operational, economic, or regulatory effect. |
-| **2** | **Unlikely:** Vulnerability exists but requires specialized prerequisites or elevated access. | **Minor:** Isolated disruption to non-essential systems; zero data exposure. |
-| **3** | **Possible:** Attack methods are well-documented; known exploits circulate publicly. | **Moderate:** Partial service unavailability; local privilege compromise. |
-| **4** | **Likely:** Exposed, internet-facing vector subject to daily opportunistic automated scans. | **High:** Extensive disruption; significant data loss; lateral movement potential. |
-| **5** | **Almost Certain:** Active zero-barrier exposure (e.g., unauthenticated publicly routable port). | **Critical:** Complete system compromise; domain takeover; regulatory non-compliance. |
+| **1** | **Rare:** Very unlikely to happen; needs unusual conditions. | **Minimal:** Little to no real effect on operations. |
+| **2** | **Unlikely:** Possible, but requires high effort or insider access. | **Minor:** Minor issue; easily fixed with no sensitive data lost. |
+| **3** | **Possible:** Known attack type; frequently seen online. | **Moderate:** Some disruption or localized system compromise. |
+| **4** | **Likely:** System is directly exposed and easy to target. | **High:** Severe impact; administrative access lost or data compromised. |
+| **5** | **Almost Certain:** Zero protection on an active, open target. | **Critical:** Total takeover of the system or cloud account. |
 
 ---
 
-### Phase 4: Framework Alignment
+### Phase 4: Mapping Controls to Security Frameworks
 
-Technical risk mitigations must be defensible, auditable, and mapped directly to governance frameworks rather than implemented as unverified ad-hoc changes.
+Security recommendations need to point back to recognized standards so auditors and leadership can see why a fix is necessary.
 
-* **NIST Cybersecurity Framework (CSF):** Core functions include **Identify (ID)**, **Protect (PR)**, **Detect (DE)**, **Respond (RS)**, and **Recover (RC)**.
-* **CIS Critical Security Controls (v8):** Prescriptive, prioritized technical safeguards designed to eliminate top modern attack vectors.
-* **Control Typology:**
-  * **Preventive:** Deter or intercept attacks before compromise occurs (e.g., Network segmentation, MFA).
-  * **Detective:** Identify and flag anomalous or unauthorized access while underway (e.g., SIEM, Centralized logging).
-  * **Corrective:** Remediate and recover system integrity post-event (e.g., System patching, incident response backups).
+* **NIST CSF:** Focuses on the core functions: **Identify**, **Protect**, **Detect**, **Respond**, and **Recover**.
+* **CIS Controls:** A list of direct, technical steps to block the most common cyber attacks.
+* **Control Categories:**
+  * **Preventive:** Stops the attack before it happens (e.g., firewall rules, MFA).
+  * **Detective:** Alerts you when suspicious activity happens (e.g., log monitoring, SIEM).
+  * **Corrective:** Fixes the issue after it happens (e.g., patching, backups).
 
 ---
 
-## Formal GRC Deliverable: Cloud Security Assessment Report
+## Final Deliverable: GRC Risk Assessment Report
 
 ### 1. Executive Summary
 
-This cloud security risk assessment evaluated the architectural posture of an Azure compute asset from a Governance, Risk, and Compliance (GRC) perspective. The primary objective was to inventory target assets, identify threat vectors, isolate vulnerabilities, quantify business exposure, and recommend compensating controls aligned with recognized industry standards.
+This report outlines the findings from a cloud security risk assessment performed on an Azure virtual machine. The goal was to audit the environment, identify key assets and realistic threats, score risks, and suggest standard security controls mapped to industry frameworks.
 
-The assessment revealed a **Medium to High overall risk posture**. Key findings include an exposed management interface (RDP) accessible to the public internet, single-factor local administrative authentication, default unhardened OS controls, and an absence of centralized SIEM-forwarded logging. These gaps create exposure to automated credential attacks, undetected lateral movement, and unauthorized system access. Compensating controls must be implemented immediately.
+The overall risk posture for this system is rated **Medium to High**. The biggest issues found were an open RDP management port exposed to the internet, no multi-factor authentication (MFA) on the admin account, default operating system settings with no extra hardening, and no centralized log forwarding. These weaknesses make the system vulnerable to brute-force attacks and credential theft.
 
-### 2. Scope & Target Architecture
+### 2. Scope & Target Environment
 
-| Assessment Attribute | Scope Detail |
+| Setting | Details |
 | :--- | :--- |
-| **Target Scope** | Standalone Cloud Compute Workload (Single Node) |
-| **Platform** | Microsoft Azure |
+| **Scope** | Single cloud virtual machine |
+| **Cloud Provider** | Microsoft Azure |
 | **Resource Group** | `GRC-Lab` |
-| **Host Name** | `GRC-WIN-VM01` |
-| **Operating System** | Windows Server 2022 Datacenter (x64) |
-| **Network Boundary** | Azure VNet / Subnet with attached Network Security Group |
-| **Ingress Access** | Remote Desktop Protocol (TCP Port 3389) via Public IPv4 |
-| **Identity Mechanism** | Local Account (`azureadmin`) with Local Administrative Rights |
-| **Assessment Methodology** | Non-intrusive Configuration Audit & Control Verification |
+| **Virtual Machine** | `GRC-WIN-VM01` |
+| **Operating System** | Windows Server 2022 Datacenter |
+| **Remote Access** | Remote Desktop Protocol (RDP) on Port 3389 |
+| **Internet Facing** | Yes (Public IP assigned) |
+| **Admin Account** | `azureadmin` (Local Admin) |
+| **Assessment Type** | Non-intrusive GRC configuration review |
 
-### 3. Identified Assets & Threat Profiles
+### 3. Asset, Threat, and Vulnerability Breakdown
