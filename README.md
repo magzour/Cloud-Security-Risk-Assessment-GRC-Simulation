@@ -200,7 +200,7 @@ The overall risk posture for this system is rated **Medium to High**. The bigges
 | **Operating System** | Windows Server 2022 Datacenter |
 | **Remote Access** | Remote Desktop Protocol (RDP) on Port 3389 |
 | **Internet Facing** | Yes (Public IP assigned) |
-| **Admin Account** | `azureadmin` (Local Admin) |
+| **Admin Account** | `azureuser` (Local Admin) |
 | **Assessment Type** | Non-intrusive GRC configuration review |
 
 ### 3. Asset, Threat, and Vulnerability Breakdown
