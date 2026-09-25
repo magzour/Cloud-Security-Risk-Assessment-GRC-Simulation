@@ -205,23 +205,24 @@ The overall risk posture for this system is rated **Medium to High**. The bigges
 
 ### 3. Asset, Threat, and Vulnerability Breakdown
 
-[ Internet ]
-│
-(Port 3389)  <-- Brute-Force / Credential Stuffing
-▼
-┌──────────────────────────────────────────────┐
-│ Network Security Group (NSG)                 │
-│ Rule: Allow Inbound from Any (0.0.0.0/0)     │
-└──────┬───────────────────────────────────────┘
-│
-▼
-┌──────────────────────────────────────────────┐
-│ Azure VM: GRC-WIN-VM01                       │
-│  ├── Account: azureadmin (Password only/No MFA)
-│  ├── Logs: Stored locally only (No SIEM)     │
-│  └── Config: Default Windows Server settings │
-└──────────────────────────────────────────────┘
-
+```text
+   [ Internet ] 
+        │
+   (Port 3389)  <-- Brute-Force / Credential Stuffing
+        ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │ Network Security Group (NSG)                                │
+ │ Rule: Allow Inbound from Any (0.0.0.0/0)                    │
+ └──────────────────────────────┬──────────────────────────────┘
+                                │
+                                ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │ Azure VM: GRC-WIN-VM01                                      │
+ │  ├── Account: azureadmin (Password only / No MFA)           │
+ │  ├── Logs: Stored locally only (No SIEM)                    │
+ │  └── Config: Default Windows Server settings                │
+ └─────────────────────────────────────────────────────────────┘
+```
 
 | Asset | What It Does | Threat | Vulnerability |
 | :--- | :--- | :--- | :--- |
