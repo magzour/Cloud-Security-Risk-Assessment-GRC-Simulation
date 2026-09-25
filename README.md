@@ -80,8 +80,8 @@ Create a simple target VM inside the `GRC-Lab` resource group:
   * **Image:** `Windows Server 2022 Datacenter - x64 Gen2`
   * **Size:** `Standard_DC1s_v3` (keeps lab costs low)
 * **Administrator Account:**
-  * **Username:** `azureadmin`
-  * **Password:** Strong password (saved securely)
+  * **Username:** `azureuser`
+  * **Password:** Password of your choice (saved securely)
 * **Inbound Port Rules:**
   * **Public Inbound Ports:** Select *Allow selected ports*
   * **Allowed Ports:** `RDP (3389)` *(opened intentionally to simulate public exposure)*
