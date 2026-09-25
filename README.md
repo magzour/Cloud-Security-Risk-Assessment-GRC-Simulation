@@ -204,3 +204,63 @@ The overall risk posture for this system is rated **Medium to High**. The bigges
 | **Assessment Type** | Non-intrusive GRC configuration review |
 
 ### 3. Asset, Threat, and Vulnerability Breakdown
+
+[ Internet ]
+│
+(Port 3389)  <-- Brute-Force / Credential Stuffing
+▼
+┌──────────────────────────────────────────────┐
+│ Network Security Group (NSG)                 │
+│ Rule: Allow Inbound from Any (0.0.0.0/0)     │
+└──────┬───────────────────────────────────────┘
+│
+▼
+┌──────────────────────────────────────────────┐
+│ Azure VM: GRC-WIN-VM01                       │
+│  ├── Account: azureadmin (Password only/No MFA)
+│  ├── Logs: Stored locally only (No SIEM)     │
+│  └── Config: Default Windows Server settings │
+└──────────────────────────────────────────────┘
+
+
+| Asset | What It Does | Threat | Vulnerability |
+| :--- | :--- | :--- | :--- |
+| **Public RDP (Port 3389)** | Remote access into the VM | Brute-force attacks and password guessing | NSG allows traffic from any IP address |
+| **Admin Account** | Full control over the Windows OS | Credential theft or compromised password | Only protected by password (No MFA) |
+| **Virtual Machine OS** | Runs server roles and services | Known exploits and unpatched bugs | Default build with no custom hardening |
+| **Windows Security Logs** | Records logins and system events | Attacker activities go unnoticed | Logs stay on the machine; no centralized SIEM |
+| **Azure Subscription** | Controls cloud billing and resources | Unauthorized configuration changes | Single admin account without role limits |
+
+### 4. Risk Register
+
+$$\text{Risk Score} = \text{Likelihood} \times \text{Impact}$$
+
+| Asset | Threat | Likelihood | Impact | Risk Score | Risk Level | Reason |
+| :--- | :--- | :---: | :---: | :---: | :---: | :--- |
+| **RDP Port** | Brute-force attack | 4 | 4 | **16** | **High** | Port 3389 is wide open to the internet and constantly targeted by bots. |
+| **Admin Account** | Password compromise | 3 | 5 | **15** | **High** | If this password leaks, the attacker gets full control over the machine. |
+| **Windows OS** | Unpatched exploits | 3 | 4 | **12** | **Medium** | Default OS installations often have known vulnerabilities that need patching. |
+| **Azure Account** | Unauthorized cloud changes | 2 | 5 | **10** | **Medium** | If the cloud login is compromised, the attacker can alter or delete resources. |
+| **Event Logs** | Undetected intrusion | 3 | 3 | **9** | **Medium** | Local logs can easily be cleared or ignored without a centralized dashboard. |
+
+### 5. Framework Mapping Table
+
+| Finding | Recommended Control | Control Type | NIST CSF Mapping | CIS Controls Mapping |
+| :--- | :--- | :---: | :--- | :--- |
+| **Open RDP Port** | Restrict NSG rules to specific management IPs or use Azure Bastion. | Preventive | **PR.AC-5:** Network access is controlled | **CIS 4.4:** Restrict external-facing ports |
+| **Single-Factor Admin** | Enforce Multi-Factor Authentication (MFA) and strong password rules. | Preventive | **PR.AC-7:** Multi-factor authentication is used | **CIS 6.3:** Require MFA for remote access |
+| **Default OS Settings** | Apply regular OS patch cycles and CIS benchmark hardening. | Corrective | **PR.IP-12:** Vulnerability management plan | **CIS 7.4:** Automated patch management |
+| **Broad Azure Access** | Use Role-Based Access Control (RBAC) to enforce least privilege. | Preventive | **PR.AC-4:** Access permissions are managed | **CIS 5.4:** Restrict administrative privileges |
+| **Local-Only Logging** | Stream system and security logs to Azure Log Analytics or a SIEM. | Detective | **DE.CM-1:** Networks and systems are monitored | **CIS 8.2:** Centralize audit log storage |
+
+### 6. Recommendations & Action Plan
+
+1. **Step 1 (Immediate):** Update the Azure NSG to remove the open `0.0.0.0/0` rule on port 3389. Restrict access strictly to a known management IP address.
+2. **Step 2 (Immediate):** Enable MFA on the Azure administrative account and require strong passphrases.
+3. **Step 3 (Short-Term):** Replace public RDP access entirely with Azure Bastion or an encrypted VPN tunnel.
+4. **Step 4 (Short-Term):** Turn on automatic updates and follow the CIS Windows Server benchmark to disable unneeded services.
+5. **Step 5 (Ongoing):** Connect the VM's logs to an Azure Log Analytics workspace or Microsoft Sentinel so failed logins trigger automated alerts.
+
+### 7. Conclusion & Risk Summary
+
+Even though this lab was built around a single virtual machine, it demonstrates the most common security gaps found in real cloud environments: open management ports, password-only logins, and a lack of centralized log collection. By closing public RDP access, turning on MFA, and forwarding logs to a central workspace, the risk level of this deployment drops from **High** down to an acceptable, defensible **Low**.
